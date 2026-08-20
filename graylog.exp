@@ -1,12 +1,15 @@
 #!/usr/bin/expect -f
-set password "FJC8u3iPG4lvXG*"
-set passToHash "abc123"
+set rsi_password [lindex $argv 3]
+set passToHash [lindex $argv 0]
+set entry_user [lindex $argv 1]
+set server_ip [lindex $argv 2]
+set root_password [lindex $argv 4]
 set hashedPass [ exec bash -c "echo -n \"$passToHash\" | sha256sum | tr -d \" -\""]
-set filename "/etc/graylog/server/server.conf"
-spawn ssh rsiadmin@10.206.249.200 
+set filename [lindex $argv 5]
+spawn ssh "$entry_user@$server_ip"
 expect {
 	-re ".*Password:.*" {
-		send "$password\r"
+		send "$rsi_password\r"
 		exp_continue
 		}
 	 "$ " {
@@ -15,7 +18,7 @@ expect {
 }
 expect {
 	-re ".*Password:.*" {
-		send "$password\r"
+		send "$root_password\r"
 		exp_continue
 		}
 	 "# " {
