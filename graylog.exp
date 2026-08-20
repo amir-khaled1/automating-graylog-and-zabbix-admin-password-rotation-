@@ -1,0 +1,46 @@
+#!/usr/bin/expect -f
+set password "FJC8u3iPG4lvXG*"
+set passToHash "abc123"
+set hashedPass [ exec bash -c "echo -n \"$passToHash\" | sha256sum | tr -d \" -\""]
+set filename "/etc/graylog/server/server.conf"
+spawn ssh rsiadmin@10.206.249.200 
+expect {
+	-re ".*Password:.*" {
+		send "$password\r"
+		exp_continue
+		}
+	 "$ " {
+		send "su\r"
+		}
+}
+expect {
+	-re ".*Password:.*" {
+		send "$password\r"
+		exp_continue
+		}
+	 "# " {
+		send "systemctl stop graylog-server && systemctl stop elasticsearch\r"
+		}
+
+} 
+expect {
+	"# " {
+		send "sed -i \"s/.*root_password_sha2.*/root_password_sha2 = $hashedPass/\" \"$filename\"\r"
+	}
+}
+expect {
+	"# " {
+		send "systemctl start elasticsearch ; systemctl start graylog-server\r" 
+	}
+}
+expect {
+	"# " {
+		send "exit\r" 
+	}
+}
+expect {
+	"$ " {
+		send "exit\r"
+	}
+} 
+expect eof
