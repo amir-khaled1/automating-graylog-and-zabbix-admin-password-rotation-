@@ -1,12 +1,11 @@
 #!/usr/bin/expect -f
-set rsi_password [lindex $argv 3]
 set passToHash [lindex $argv 0]
-set entry_user [lindex $argv 1]
-set server_ip [lindex $argv 2]
-set root_password [lindex $argv 4]
+set server_ip [lindex $argv 1]
+set rsi_password [lindex $argv 2]
+set root_password [lindex $argv 3]
 set hashedPass [ exec bash -c "echo -n \"$passToHash\" | sha256sum | tr -d \" -\""]
-set filename [lindex $argv 5]
-spawn ssh "$entry_user@$server_ip"
+set filename [lindex $argv 4]
+spawn ssh "rsiadmin@$server_ip"
 expect {
 	-re ".*Password:.*" {
 		send "$rsi_password\r"
@@ -14,6 +13,10 @@ expect {
 		}
 	 "$ " {
 		send "su\r"
+		}
+	-re ".*yes/no.*" {
+		send "yes\r"
+		exp_continue
 		}
 }
 expect {

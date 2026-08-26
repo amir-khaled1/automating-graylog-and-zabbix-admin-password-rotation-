@@ -1,0 +1,62 @@
+#!/usr/bin/expect -f 
+
+set encrypted_pwd [lindex $argv 0]
+set rsiadmin_pwd [lindex $argv 1]
+set root_pwd [lindex $argv 2]
+set sql_root_pwd [lindex $argv 3]
+set server_ip [lindex $argv 4]
+
+spawn ssh "rsiadmin@$server_ip"
+expect {
+	-re ".*Password:.*" {
+		send "$rsiadmin_pwd\r"
+		exp_continue
+	}
+	"$ " {
+		send "su\r"
+	}
+	-re ".*yes/no.*" {
+		send "yes\r"
+	}
+}
+expect {
+	-re ".*Password:.*" {
+		send "$root_pwd\r"
+		exp_continue
+	}
+	"# " {
+		send "mysql -u root -p\r"
+	}
+}
+expect {
+	-re ".*password.*" {
+		send "$sql_root_pwd\r"
+		exp_continue
+	}
+	"> " {
+		send "use zabbix;\r"
+	}
+}
+expect {
+	"> " {
+		send "UPDATE users SET passwd = '$encrypted_pwd' WHERE username = 'Admin' ;\r"
+	}
+}
+expect {
+	"> " {
+	send "commit;exit;\r"
+	}
+} 
+	
+expect {
+	"# " {
+	send "exit\r"
+	}
+}
+expect {
+	"$ " {
+	send "exit\r"
+	}
+}
+expect eof
+	
