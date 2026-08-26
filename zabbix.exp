@@ -8,19 +8,19 @@ set server_ip [lindex $argv 4]
 
 spawn ssh "rsiadmin@$server_ip"
 expect {
-	-re ".*Password:.*" {
+	-re "Password:" {
 		send "$rsiadmin_pwd\r"
 		exp_continue
 	}
 	"$ " {
 		send "su\r"
 	}
-	-re ".*yes/no.*" {
+	-re "yes/no" {
 		send "yes\r"
 	}
 }
 expect {
-	-re ".*Password:.*" {
+	-re "Password:" {
 		send "$root_pwd\r"
 		exp_continue
 	}
@@ -29,7 +29,7 @@ expect {
 	}
 }
 expect {
-	-re ".*password.*" {
+	-re "password:" {
 		send "$sql_root_pwd\r"
 		exp_continue
 	}

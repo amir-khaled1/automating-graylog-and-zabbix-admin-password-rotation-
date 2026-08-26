@@ -7,20 +7,20 @@ set hashedPass [ exec bash -c "echo -n \"$passToHash\" | sha256sum | tr -d \" -\
 set filename [lindex $argv 4]
 spawn ssh "rsiadmin@$server_ip"
 expect {
-	-re ".*Password:.*" {
+	-re "Password:" {
 		send "$rsi_password\r"
 		exp_continue
 		}
 	 "$ " {
 		send "su\r"
 		}
-	-re ".*yes/no.*" {
+	-re "yes/no" {
 		send "yes\r"
 		exp_continue
 		}
 }
 expect {
-	-re ".*Password:.*" {
+	-re "Password:" {
 		send "$root_password\r"
 		exp_continue
 		}
