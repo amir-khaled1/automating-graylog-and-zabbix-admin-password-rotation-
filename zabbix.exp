@@ -1,61 +1,87 @@
 #!/usr/bin/expect -f 
-
+log_user 0
+log_file -a file.log
 set encrypted_pwd [lindex $argv 0]
 set rsiadmin_pwd [lindex $argv 1]
 set root_pwd [lindex $argv 2]
 set sql_root_pwd [lindex $argv 3]
 set server_ip [lindex $argv 4]
-
+set rsi_pwd_prompt_demand 0
 spawn ssh "rsiadmin@$server_ip"
 expect {
-	-re "Password:" {
+	 "Password:" {
+		incr rsi_pwd_prompt_demand
+		if {$rsi_pwd_prompt_demand > 1} {
+			exit 3
+		}
+		
 		send "$rsiadmin_pwd\r"
 		exp_continue
-	}
-	"$ " {
+		}
+	 "$ " {
 		send "su\r"
-	}
-	-re "yes/no" {
+		}
+	"yes/no" {
 		send "yes\r"
+		exp_continue
+		}
+	timeout {
+		exit 11
 	}
+	eof {
+		exit 10
+	}
+	
 }
 expect {
-	-re "Password:" {
+	"Password:" {
 		send "$root_pwd\r"
 		exp_continue
 	}
 	"# " {
 		send "mysql -u root -p\r"
 	}
+	"failure" {
+		exit 4
+		}	
 }
 expect {
-	-re "password:" {
+	"password:" {
 		send "$sql_root_pwd\r"
 		exp_continue
 	}
 	"> " {
 		send "use zabbix;\r"
 	}
+	"ERROR" {
+		exit 5
+	}
 }
 expect {
-	"> " {
+	"Database changed" {
 		send "UPDATE users SET passwd = '$encrypted_pwd' WHERE username = 'Admin' ;\r"
+		exp_continue
+	}
+	"ERROR" {
+		exit 5
+	}
+	"Query OK, 1 row affected" {
+		send "commit;exit;\r"
+	}
+
+	"Query OK, 0 row affected" {
+		exit 5
 	}
 }
-expect {
-	"> " {
-	send "commit;exit;\r"
-	}
-} 
 	
 expect {
 	"# " {
-	send "exit\r"
+		send "exit\r"
 	}
 }
 expect {
 	"$ " {
-	send "exit\r"
+		send "exit\r"
 	}
 }
 expect eof

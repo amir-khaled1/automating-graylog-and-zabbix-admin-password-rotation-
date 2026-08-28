@@ -1,48 +1,85 @@
 #!/usr/bin/expect -f
-set passToHash [lindex $argv 0]
+log_file -a file.log
+log_user 0
+set hashedPass [lindex $argv 0]
 set server_ip [lindex $argv 1]
 set rsi_password [lindex $argv 2]
 set root_password [lindex $argv 3]
-set hashedPass [ exec bash -c "echo -n \"$passToHash\" | sha256sum | tr -d \" -\""]
 set filename [lindex $argv 4]
+set rsi_pwd_prompt_demand 0
 spawn ssh "rsiadmin@$server_ip"
 expect {
-	-re "Password:" {
+	 "Password:" {
+		incr rsi_pwd_prompt_demand
+		if {$rsi_pwd_prompt_demand > 1} {
+			exit 3
+		}
+		
 		send "$rsi_password\r"
 		exp_continue
 		}
 	 "$ " {
 		send "su\r"
 		}
-	-re "yes/no" {
+	"yes/no" {
 		send "yes\r"
 		exp_continue
 		}
+	timeout {
+		exit 11
+	}
+	eof {
+		exit 10
+	}
+	
 }
 expect {
-	-re "Password:" {
+	"Password:" {
 		send "$root_password\r"
 		exp_continue
 		}
 	 "# " {
 		send "systemctl stop graylog-server && systemctl stop elasticsearch\r"
 		}
+	"failure" {
+		exit 4
+		}	
 
 } 
 expect {
+	"Failure to stop graylog-server" {
+		exit 5
+	}
+	"Failure to stop elasticsearch" {
+		send "systemctl start graylog-server\r"
+		exit 6
+	}
 	"# " {
 		send "sed -i \"s/.*root_password_sha2.*/root_password_sha2 = $hashedPass/\" \"$filename\"\r"
 	}
 }
 expect {
-	"# " {
+	"sed:" {
 		send "systemctl start elasticsearch ; systemctl start graylog-server\r" 
+		exit 7
+	}
+	"# " {
+		send "systemctl start elasticsearch && systemctl start graylog-server\r" 
 	}
 }
 expect {
+	"Failure to start elasticsearch" {
+		exit 8
+	}
+	
+	"Failure to start graylog-server" {
+		exit 9
+	}
+	
 	"# " {
 		send "exit\r" 
 	}
+
 }
 expect {
 	"$ " {

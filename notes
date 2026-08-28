@@ -1,0 +1,16 @@
+graylog exit codes:
+3: wrong rsiadmin password
+4: wrong root password  
+5: failure to stop graylog-server 
+6: failure to stop elasticsearch 
+7: failure to sed 
+8: failure to start elastic search 
+9: failure to start graylog-server
+10: eof of a shutdown ssh 
+11: ssh timed out
+
+zabbix exit codes:
+1: ssh timed out
+3: wrong rsiadmin password
+4: wrong root password  
+11: ssh timed out

@@ -1,0 +1,134 @@
+spawn ssh rsiadmin@10.206.249.200
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+(rsiadmin@10.206.249.200) Password: 
+Linux graylog-pfe 5.10.0-38-amd64 #1 SMP Debian 5.10.249-1 (2026-02-10) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Fri Aug 28 09:32:35 2026 from 10.206.206.64
+[?2004h]0;rsiadmin@graylog-pfe: ~[01;32mrsiadmin@graylog-pfe[00m:[01;34m~[00m$ su
+[?2004lPassword: 
+[?2004hroot@graylog-pfe:/home/rsiadmin# systemctl stop graylog-server && systemctl stop elasticsearch
+[?2004l[?2004hroot@graylog-pfe:/home/rsiadmin# sed -i "s/.*root_password_sha2.*/root_password_sha2 = 0ebc05abc73edc6a096b0e0247fc01d24714d743e26deb881bfdd25c225d0e4c/" "/etc/graylog/server/server.conf"
+[?2004l[?2004hroot@graylog-pfe:/home/rsiadmin# systemctl start elasticsearch && systemctl start graylog-server
+[?2004l[?2004hroot@graylog-pfe:/home/rsiadmin# exit
+[?2004lexit
+[?2004h]0;rsiadmin@graylog-pfe: ~[01;32mrsiadmin@graylog-pfe[00m:[01;34m~[00m$ exit
+[?2004llogout
+Connection to 10.206.249.200 closed.
+the admin password to the graylog server 10.206.249.200 is 4Z*FQqUquylbxz6
+spawn ssh rsiadmin@10.206.249.219
+(rsiadmin@10.206.249.219) Password: 
+Linux zabbixpfe 6.1.0-52-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.180-1 (2026-08-03) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Fri Aug 28 10:29:44 2026 from 10.206.206.64
+[?2004h]0;rsiadmin@zabbixpfe: ~[01;32mrsiadmin@zabbixpfe[00m:[01;34m~[00m$ su
+[?2004lPassword: 
+[?2004hroot@zabbixpfe:/home/rsiadmin# mysql -u root -p
+[?2004lEnter password: 
+(B[0;1mWelcome to the MariaDB monitor.  Commands end with ; or \g.
+(B[m(B[0;1mYour MariaDB connection id is 6018
+Server version: 10.11.18-MariaDB-0+deb12u1 Debian 12
+
+(B[m(B[0;1mCopyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+(B[m(B[0;1mType 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+(B[mMariaDB [(none)]> use zabbix;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+(B[0;1mDatabase changed
+(B[mMariaDB [zabbix]> UPDATE users SET passwd = '$2y$10$V1Tx3PK0zSudMRZjZH7yDuyRoEv1/7UdC2yORcHO.Lu02aO3eDcfi' WHERE username = 'Admin' ;
+(B[0;1mQuery OK, 1 row affected (0.002 sec)
+(B[m(B[0;1mRows matched: 1  Changed: 1  Warnings: 0
+(B[m(B[0;1m
+(B[mMariaDB [zabbix]> commit;exit;
+(B[0;1mQuery OK, 0 rows affected (0.000 sec)
+(B[m(B[0;1m
+(B[m(B[0;1mBye
+(B[m[?2004hroot@zabbixpfe:/home/rsiadmin# exit
+[?2004lexit
+[?2004h]0;rsiadmin@zabbixpfe: ~[01;32mrsiadmin@zabbixpfe[00m:[01;34m~[00m$ exit
+[?2004llogout
+Connection to 10.206.249.219 closed.
+the admin password to the graylog server 10.206.249.219 is 5XAcSUOGV*QU#n9
+spawn ssh rsiadmin@10.206.249.200
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+(rsiadmin@10.206.249.200) Password: 
+Linux graylog-pfe 5.10.0-38-amd64 #1 SMP Debian 5.10.249-1 (2026-02-10) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Fri Aug 28 10:34:23 2026 from 10.206.206.64
+[?2004h]0;rsiadmin@graylog-pfe: ~[01;32mrsiadmin@graylog-pfe[00m:[01;34m~[00m$ su
+[?2004lPassword: 
+[?2004hroot@graylog-pfe:/home/rsiadmin# systemctl stop graylog-server && systemctl stop elasticsearch
+[?2004l[?2004hroot@graylog-pfe:/home/rsiadmin# sed -i "s/.*root_password_sha2.*/root_password_sha2 = e114051ae725c4301994b38186e630b3a8278e8d90ab1b45e7a2eae78050c468/" "/etc/graylog/server/server.conf"
+[?2004l[?2004hroot@graylog-pfe:/home/rsiadmin# systemctl start elasticsearch && systemctl start graylog-server
+[?2004l[?2004hroot@graylog-pfe:/home/rsiadmin# exit
+[?2004lexit
+[?2004h]0;rsiadmin@graylog-pfe: ~[01;32mrsiadmin@graylog-pfe[00m:[01;34m~[00m$ exit
+[?2004llogout
+Connection to 10.206.249.200 closed.
+the admin password to the graylog server 10.206.249.200 is Ok61zA0i@3SRrAT
+spawn ssh rsiadmin@10.206.249.219
+(rsiadmin@10.206.249.219) Password: 
+Linux zabbixpfe 6.1.0-52-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.180-1 (2026-08-03) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Fri Aug 28 10:34:32 2026 from 10.206.206.64
+[?2004h]0;rsiadmin@zabbixpfe: ~[01;32mrsiadmin@zabbixpfe[00m:[01;34m~[00m$ su
+[?2004lPassword: 
+[?2004hroot@zabbixpfe:/home/rsiadmin# mysql -u root -p
+[?2004lEnter password: 
+(B[0;1mWelcome to the MariaDB monitor.  Commands end with ; or \g.
+(B[m(B[0;1mYour MariaDB connection id is 6029
+Server version: 10.11.18-MariaDB-0+deb12u1 Debian 12
+
+(B[m(B[0;1mCopyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+(B[m(B[0;1mType 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+(B[mMariaDB [(none)]> use zabbix;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+(B[0;1mDatabase changed
+(B[mMariaDB [zabbix]> UPDATE users SET passwd = '$2y$10$7P4v29qrJ2XYUlKpaMkpEOaeqrQK7HTuod/cPjdbK70kesRDFEAEi' WHERE username = 'Admin' ;
+(B[0;1mQuery OK, 1 row affected (0.001 sec)
+(B[m(B[0;1mRows matched: 1  Changed: 1  Warnings: 0
+(B[m(B[0;1m
+(B[mMariaDB [zabbix]> commit;exit;
+(B[0;1mQuery OK, 0 rows affected (0.000 sec)
+(B[m(B[0;1m
+(B[m(B[0;1mBye
+(B[m[?2004hroot@zabbixpfe:/home/rsiadmin# exit
+[?2004lexit
+[?2004h]0;rsiadmin@zabbixpfe: ~[01;32mrsiadmin@zabbixpfe[00m:[01;34m~[00m$ exit
+[?2004llogout
+Connection to 10.206.249.219 closed.
+the admin password to the graylog server 10.206.249.219 is Bg3WtLak2oM#APy
