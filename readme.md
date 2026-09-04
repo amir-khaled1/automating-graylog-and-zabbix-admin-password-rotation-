@@ -15,6 +15,7 @@ The solution consists of three main scripts:
 ## Architecture
 
 ```text
+
                 +------------+
                 |  .env file |
                 +------------+
@@ -27,13 +28,12 @@ The solution consists of three main scripts:
             +----------+----------+
             |                     |
             v                     v
-     +---------------+    +---------------+
-     |  graylog.exp  |    |  zabbix.exp   |
-     +------|---------+    +------|---------+
-	     |                     |
-	     |	 	             |  
-            v                     v 
-	logfile                 logfile    
+     +---------------+     +---------------+
+     |  graylog.exp  |     |  zabbix.exp   |
+     +-------+-------+     +-------+-------+
+             |                     |
+             v                     v
+          logfile               logfile
 ```
 
 ## Components
