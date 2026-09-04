@@ -1,12 +1,13 @@
 #!/usr/bin/expect -f
-log_file -a file.log
 log_user 0
 set hashedPass [lindex $argv 0]
 set server_ip [lindex $argv 1]
 set rsi_password [lindex $argv 2]
 set root_password [lindex $argv 3]
 set filename [lindex $argv 4]
+set logfile [lindex $argv 5]
 set rsi_pwd_prompt_demand 0
+log_file -a $logfile
 spawn ssh "rsiadmin@$server_ip"
 expect {
 	 "Password:" {

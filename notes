@@ -13,4 +13,6 @@ zabbix exit codes:
 1: ssh timed out
 3: wrong rsiadmin password
 4: wrong root password  
+5: sql realted problem 
+10: eof during ssh 
 11: ssh timed out
